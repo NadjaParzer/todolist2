@@ -1,11 +1,6 @@
 import { FilterValuesType, TodolistType } from "../App"
 import {v1} from 'uuid';
 
-type ActionType = {
-  type: string,
-  [key: string]: any
-}
-
 export type RemoveTodolistActionType = {
   type: 'REMOVE-TODOLIST',
   id: string
@@ -42,35 +37,37 @@ export const changeTodolistFilterAC = (filter: FilterValuesType, todolistId: str
   return { type: 'CHANGE-TODOLIST-FILTER', filter, id: todolistId }
 }
 
+export let todolistID1 = v1()
+export let todolistID2 = v1()
 
-export const todolistsReducer = (state: Array<TodolistType>, action: ActionsType): Array<TodolistType> => {
+const initialState:Array<TodolistType> = [
+  { id: todolistID1, title: 'What to learn', filter: 'all' },
+  { id: todolistID2, title: 'What to buy', filter: 'all' },
+]
+
+export const todolistsReducer = (state: Array<TodolistType> = initialState, action: ActionsType): Array<TodolistType> => {
   switch(action.type) {
     case 'REMOVE-TODOLIST': {
-      return state.filter(tl => tl.id != action.id)
+      return state.filter(tl => tl.id !== action.id)
     }
     case 'ADD-TODOLIST' : {
-      return [...state, {
+      return [ {
         id: action.todolistId,
         title: action.title,
         filter: 'all'
-      }]
+      }, ...state ]
     }
     case 'CHANGE-TODOLIST-TITLE': {
-      const todolist = state.find(tl => tl.id === action.id)
-      if(todolist) {
-        todolist.title = action.title
-      }
-      return [...state]
+      const copyState = state.map(tl => tl.id === action.id ? {...tl, title: action.title} : tl)
+      return copyState
     }
     case 'CHANGE-TODOLIST-FILTER': {
-      const todolist = state.find(tl => tl.id === action.id)
-      if(todolist) {
-        todolist.filter = action.filter
-      }
-      return [...state]
+      const copyState = state.map(tl => tl.id === action.id ? {...tl, filter: action.filter} : tl)
+      return copyState
     }
     
     default: 
-    throw new Error('Failed action type!')
+    return state
+    // throw new Error('Failed action type!')
   }
 }
