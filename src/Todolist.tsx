@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from './state/store';
-import { addTaskAC, removeTaskAC } from './state/tasks-reducer';
+import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC } from './state/tasks-reducer';
 
 export type TaskType = {
   id: string,
@@ -35,6 +35,14 @@ export const Todolist = React.memo((props: PropsType) => {
     const action = removeTaskAC(id, props.todolistID)
     dispatch(action)
   }, [dispatch, props.todolistID])
+
+  const onChangeHandler = useCallback((taskId, status ) => {
+    dispatch(changeTaskStatusAC(taskId, status, props.todolistID))
+  }, [dispatch, props.todolistID])
+
+  const onChangeTitle = useCallback((taskId, title) => {
+    dispatch(changeTaskTitleAC(taskId, title, props.todolistID))
+  },[dispatch, props.todolistID])
 
   const addTask = useCallback((title: string) => {
     const action = addTaskAC(title, props.todolistID)
@@ -74,7 +82,9 @@ export const Todolist = React.memo((props: PropsType) => {
       <AddItemForm addItem={addTask} />
       <List>
         {
-          tasksForTodolist.map((t) => <Task key={t.id} taskId={t.id} todolistID={props.todolistID} isDone={t.isDone} title={t.title} removeTask={removeTask} />)
+          tasksForTodolist.map((t) => <Task task={t} todolistID={props.todolistID}
+                                          changeTaskTitle={onChangeTitle}
+                                         removeTask={removeTask} changeTaskStatus={onChangeHandler} />)
         }
       </List>
       <div>
