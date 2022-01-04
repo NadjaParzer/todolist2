@@ -1,5 +1,12 @@
-import { FilterValuesType, TodolistType } from "../App"
+
 import {v1} from 'uuid';
+import { TodolistType } from "../api/todolist-api";
+
+export type FilterValuesType = 'all' | 'completed' | 'active'
+
+export type TodolistDomainType = TodolistType & {
+  filter: FilterValuesType
+}
 
 export type RemoveTodolistActionType = {
   type: 'REMOVE-TODOLIST',
@@ -40,29 +47,31 @@ export const changeTodolistFilterAC = (filter: FilterValuesType, todolistId: str
 export let todolistID1 = v1()
 export let todolistID2 = v1()
 
-const initialState:Array<TodolistType> = [
-  { id: todolistID1, title: 'What to learn', filter: 'all' },
-  { id: todolistID2, title: 'What to buy', filter: 'all' },
+const initialState:Array<TodolistDomainType> = [
+  { todolistId: todolistID1, title: 'What to learn', filter: 'all', order:0, addedDate:'' },
+  { todolistId: todolistID2, title: 'What to buy', filter: 'all', order:0, addedDate:'' },
 ]
 
-export const todolistsReducer = (state: Array<TodolistType> = initialState, action: ActionsType): Array<TodolistType> => {
+export const todolistsReducer = (state: Array<TodolistDomainType> = initialState, action: ActionsType): Array<TodolistDomainType> => {
   switch(action.type) {
     case 'REMOVE-TODOLIST': {
-      return state.filter(tl => tl.id !== action.id)
+      return state.filter(tl => tl.todolistId !== action.id)
     }
     case 'ADD-TODOLIST' : {
       return [ {
-        id: action.todolistId,
+        todolistId: action.todolistId,
         title: action.title,
+        order: 1,
+        addedDate: '',
         filter: 'all'
       }, ...state ]
     }
     case 'CHANGE-TODOLIST-TITLE': {
-      const copyState = state.map(tl => tl.id === action.id ? {...tl, title: action.title} : tl)
+      const copyState = state.map(tl => tl.todolistId === action.id ? {...tl, title: action.title} : tl)
       return copyState
     }
     case 'CHANGE-TODOLIST-FILTER': {
-      const copyState = state.map(tl => tl.id === action.id ? {...tl, filter: action.filter} : tl)
+      const copyState = state.map(tl => tl.todolistId === action.id ? {...tl, filter: action.filter} : tl)
       return copyState
     }
     

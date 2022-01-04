@@ -17,12 +17,6 @@ import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksRe
 import { title } from 'process';
 import { TodolistOld } from './TodolistOld';
 
-export type FilterValuesType = 'all' | 'completed' | 'active'
-export type TodolistType = {
-  id: string,
-  title: string,
-  filter: FilterValuesType
-}
 export type TasksStateType = {
   [key: string]: Array<TaskType>
 }
