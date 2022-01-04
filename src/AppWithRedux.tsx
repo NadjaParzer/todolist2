@@ -11,16 +11,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC } from './state/todolists-reducer';
+import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, FilterValuesType, removeTodolistAC } from './state/todolists-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from './state/store';
+import { TodolistType } from './api/todolist-api';
 
-export type FilterValuesType = 'all' | 'completed' | 'active'
-export type TodolistType = {
-  id: string,
-  title: string,
-  filter: FilterValuesType
-}
+
 export type TasksStateType = {
   [key: string]: Array<TaskType>
 }
@@ -73,8 +69,8 @@ console.log('APP is called!')
             return <Grid item>
               <Paper style={{ padding: '10px' }}>
                 <Todolist
-                  key={tl.id}
-                  todolistID={tl.id}
+                  key={tl.todolistId}
+                  todolistID={tl.todolistId}
                   removeTodolist={removeTodolist}
                   changeTodolistTitle={changeTodolistTitle}
                   changeFilter={changeFilter} filter={tl.filter} title={tl.title} />
