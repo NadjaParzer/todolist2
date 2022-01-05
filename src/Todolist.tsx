@@ -1,7 +1,6 @@
 import React, {useCallback } from 'react';
 import { AddItemForm } from './AddItemForm';
 import {Task} from './Task'
-import { FilterValuesType } from './App';
 import { Editablespan } from './Editablespan';
 import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -10,12 +9,9 @@ import List from '@material-ui/core/List';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from './state/store';
 import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC } from './state/tasks-reducer';
+import { FilterValuesType } from './state/todolists-reducer';
+import { TaskType } from './api/todolist-api';
 
-export type TaskType = {
-  id: string,
-  title: string,
-  isDone: boolean
-}
 type PropsType = {
   todolistID: string,
   title: string,
@@ -67,9 +63,9 @@ export const Todolist = React.memo((props: PropsType) => {
 
   let tasksForTodolist = tasks
   if (props.filter === 'completed') {
-    tasksForTodolist = tasks.filter(t => t.isDone === true)
+    tasksForTodolist = tasks.filter(t => t.status === 2)
   } else if (props.filter === 'active') {
-    tasksForTodolist = tasks.filter(t => t.isDone === false)
+    tasksForTodolist = tasks.filter(t => t.status === 0)
   }
 
   return (

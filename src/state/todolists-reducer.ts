@@ -1,13 +1,16 @@
-
+import { Dispatch } from 'redux';
 import {v1} from 'uuid';
-import { TodolistType } from "../api/todolist-api";
+import { todolistAPI, TodolistType } from "../api/todolist-api";
 
 export type FilterValuesType = 'all' | 'completed' | 'active'
 
 export type TodolistDomainType = TodolistType & {
   filter: FilterValuesType
 }
-
+export type SetTodolistsActionType = {
+  type: 'SET-TODOLISTS',
+  todolists: Array<TodolistType>
+}
 export type RemoveTodolistActionType = {
   type: 'REMOVE-TODOLIST',
   id: string
@@ -29,7 +32,8 @@ type ChangeTodolistFilterActionType = {
 }
 
 type ActionsType = RemoveTodolistActionType | AddTodolistActionType 
-                   | ChangeTodolistTitleActionType | ChangeTodolistFilterActionType
+                   | ChangeTodolistTitleActionType | ChangeTodolistFilterActionType 
+                   | SetTodolistsActionType
 
 export const removeTodolistAC = (todolistId: string): RemoveTodolistActionType => {
   return { type: 'REMOVE-TODOLIST', id: todolistId}
@@ -43,6 +47,17 @@ export const changeTodolistTitleAC = (title: string, todolistId: string): Change
 export const changeTodolistFilterAC = (filter: FilterValuesType, todolistId: string): ChangeTodolistFilterActionType => {
   return { type: 'CHANGE-TODOLIST-FILTER', filter, id: todolistId }
 }
+export const setTodolistsAC = (todolists: Array<TodolistType>): SetTodolistsActionType => {
+  return { type: 'SET-TODOLISTS', todolists}
+}
+export const fetchTodolistsTC = () => {
+  return (dispatch: Dispatch) => {
+    todolistAPI.getTodolists()
+    .then((res) => {
+    dispatch(setTodolistsAC(res.data))
+  })
+  }
+}
 
 export let todolistID1 = v1()
 export let todolistID2 = v1()
@@ -54,6 +69,14 @@ const initialState:Array<TodolistDomainType> = [
 
 export const todolistsReducer = (state: Array<TodolistDomainType> = initialState, action: ActionsType): Array<TodolistDomainType> => {
   switch(action.type) {
+    case 'SET-TODOLISTS': {
+      return action.todolists.map(tl => {
+        return {
+          ...tl,
+          filter: 'all'
+        }
+      })
+    }
     case 'REMOVE-TODOLIST': {
       return state.filter(tl => tl.todolistId !== action.id)
     }
