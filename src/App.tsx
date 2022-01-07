@@ -27,8 +27,8 @@ function App() {
   let todolistID2 = v1()
 
   let [todolists, setTodolists] = useState<Array<TodolistDomainType>>([
-    { todolistId: todolistID1, title: 'What to learn', filter: 'all', order:0, addedDate:'' },
-    { todolistId: todolistID2, title: 'What to buy', filter: 'all', order:0, addedDate:'' },
+    { id: todolistID1, title: 'What to learn', filter: 'all', order:0, addedDate:'' },
+    { id: todolistID2, title: 'What to buy', filter: 'all', order:0, addedDate:'' },
   ])
 
 
@@ -46,7 +46,7 @@ function App() {
   const [filter, setFilter] = useState<FilterValuesType>('all')
 
   function changeFilter(value: FilterValuesType, todolistID: string) {
-    let todolist = todolists.find(tl => tl.todolistId === todolistID)
+    let todolist = todolists.find(tl => tl.id === todolistID)
     if(todolist) {
       todolist.filter = value
       setTodolists([...todolists])
@@ -73,13 +73,13 @@ function App() {
       }
   }
   function removeTodolist(todolistID: string) {
-    let filteredTodolists = todolists.filter(tl => tl.todolistId !== todolistID)
+    let filteredTodolists = todolists.filter(tl => tl.id !== todolistID)
     delete tasks[todolistID]
     setTodolists(filteredTodolists)
     setTasks({...tasks})
   }
   function changeTodolistTitle(newTitle: string, todolistID: string) {
-   const todolist = todolists.find(tl => tl.todolistId === todolistID)
+   const todolist = todolists.find(tl => tl.id === todolistID)
     if(todolist) {
       todolist.title = newTitle
       setTodolists([...todolists])
@@ -87,14 +87,14 @@ function App() {
   }
   function addTodolist(title: string) {
     let todolist: TodolistDomainType = {
-      todolistId: v1(),
+      id: v1(),
       filter: 'all',
       title,
       addedDate: '',
       order: 0
     }
     setTodolists([todolist, ...todolists])
-    setTasks({...tasks, [todolist.todolistId]: []})
+    setTasks({...tasks, [todolist.id]: []})
   }
 
   function changeTaskTitle(taskId: string, newTitle: string, todolistID: string) {
@@ -125,17 +125,17 @@ function App() {
         </Grid>
         <Grid container spacing={3} >
             {todolists.map(tl => {
-                    let tasksForTodolist = tasks[tl.todolistId]
+                    let tasksForTodolist = tasks[tl.id]
                     if (tl.filter === 'completed') {
-                      tasksForTodolist = tasks[tl.todolistId].filter(t => t.status === TaskStatuses.Completed)
+                      tasksForTodolist = tasks[tl.id].filter(t => t.status === TaskStatuses.Completed)
                     } else if (tl.filter === 'active') {
-                      tasksForTodolist = tasks[tl.todolistId].filter(t => t.status === TaskStatuses.New)
+                      tasksForTodolist = tasks[tl.id].filter(t => t.status === TaskStatuses.New)
                     }
                     return  <Grid item>
                         <Paper style={{padding: '10px'}}>
                           <TodolistOld 
-                      key={tl.todolistId}
-                      todolistID={tl.todolistId}
+                      key={tl.id}
+                      todolistID={tl.id}
                       removeTodolist={removeTodolist}
                       changeTaskTitle={changeTaskTitle}
                       changeTodolistTitle={changeTodolistTitle}

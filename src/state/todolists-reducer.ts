@@ -63,8 +63,8 @@ export let todolistID1 = v1()
 export let todolistID2 = v1()
 
 const initialState:Array<TodolistDomainType> = [
-  { todolistId: todolistID1, title: 'What to learn', filter: 'all', order:0, addedDate:'' },
-  { todolistId: todolistID2, title: 'What to buy', filter: 'all', order:0, addedDate:'' },
+  // { todolistId: todolistID1, title: 'What to learn', filter: 'all', order:0, addedDate:'' },
+  // { todolistId: todolistID2, title: 'What to buy', filter: 'all', order:0, addedDate:'' },
 ]
 
 export const todolistsReducer = (state: Array<TodolistDomainType> = initialState, action: ActionsType): Array<TodolistDomainType> => {
@@ -78,11 +78,11 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
       })
     }
     case 'REMOVE-TODOLIST': {
-      return state.filter(tl => tl.todolistId !== action.id)
+      return state.filter(tl => tl.id !== action.id)
     }
     case 'ADD-TODOLIST' : {
       return [ {
-        todolistId: action.todolistId,
+        id: action.todolistId,
         title: action.title,
         order: 1,
         addedDate: '',
@@ -90,11 +90,11 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
       }, ...state ]
     }
     case 'CHANGE-TODOLIST-TITLE': {
-      const copyState = state.map(tl => tl.todolistId === action.id ? {...tl, title: action.title} : tl)
+      const copyState = state.map(tl => tl.id === action.id ? {...tl, title: action.title} : tl)
       return copyState
     }
     case 'CHANGE-TODOLIST-FILTER': {
-      const copyState = state.map(tl => tl.todolistId === action.id ? {...tl, filter: action.filter} : tl)
+      const copyState = state.map(tl => tl.id === action.id ? {...tl, filter: action.filter} : tl)
       return copyState
     }
     

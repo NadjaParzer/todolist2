@@ -22,7 +22,6 @@ export type TasksStateType = {
 }
 
 function AppWithRedux() {
-console.log('APP is called!')
   const dispatch = useDispatch()
   const todolists = useSelector<AppRootState, Array<TodolistDomainType>>((state) => state.todolists)
   //const [filter, setFilter] = useState<FilterValuesType>('all')
@@ -35,17 +34,17 @@ console.log('APP is called!')
     const action = removeTodolistAC(todolistID)
     dispatch(action)
   }, [dispatch])
-
+  
   const changeTodolistTitle = useCallback((newTitle: string, todolistID: string) => {
     dispatch(changeTodolistTitleAC(newTitle, todolistID))
   }, [dispatch])
+
   const addTodolist = useCallback((title: string) => {
     const action = addTodolistAC(title)
     dispatch(action)
   }, [dispatch])
 
   const changeFilter = useCallback((value: FilterValuesType, todolistID: string) => {
-   
     const action = changeTodolistFilterAC(value, todolistID)
     dispatch(action)
      console.log('action', action)
@@ -73,8 +72,8 @@ console.log('APP is called!')
             return <Grid item>
               <Paper style={{ padding: '10px' }}>
                 <Todolist
-                  key={tl.todolistId}
-                  todolistID={tl.todolistId}
+                  key={tl.id}
+                  todolistID={tl.id}
                   removeTodolist={removeTodolist}
                   changeTodolistTitle={changeTodolistTitle}
                   changeFilter={changeFilter} filter={tl.filter} title={tl.title} />

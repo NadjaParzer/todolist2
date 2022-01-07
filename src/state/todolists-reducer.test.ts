@@ -10,8 +10,8 @@ beforeEach(() => {
   todolistId1 = v1()
   todolistId2 = v1()
   startState = [
-    {todolistId: todolistId1, title: "What to learn", filter: "all", order:0, addedDate:'' },
-    {todolistId: todolistId2, title: "What to buy", filter: "all", order:0, addedDate:''}
+    {id: todolistId1, title: "What to learn", filter: "all", order:0, addedDate:'' },
+    {id: todolistId2, title: "What to buy", filter: "all", order:0, addedDate:''}
   ]
 })
 
@@ -19,7 +19,7 @@ test('correct todolist should be removed', () => {
    const endState = todolistsReducer(startState, removeTodolistAC(todolistId1))
 
    expect(endState.length).toBe(1);
-   expect(endState[0].todolistId).toBe(todolistId2);
+   expect(endState[0].id).toBe(todolistId2);
 });
 
 test('correct todolist should be added', () => {

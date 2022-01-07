@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 export type TodolistType = {
-  todolistId: string
+  id: string
   title: string
   addedDate: string
   order: number

@@ -26,8 +26,8 @@ function AppWithUseReducers() {
   let todolistID2 = v1()
 
   let [todolists, dispatchToTodolistsReducer] = useReducer(todolistsReducer, [
-    { todolistId: todolistID1, title: 'What to learn', filter: 'all', order:0, addedDate:''  },
-    { todolistId: todolistID2, title: 'What to buy', filter: 'all', order:0, addedDate:''  },
+    { id: todolistID1, title: 'What to learn', filter: 'all', order:0, addedDate:''  },
+    { id: todolistID2, title: 'What to buy', filter: 'all', order:0, addedDate:''  },
   ])
 
 
@@ -99,17 +99,17 @@ function AppWithUseReducers() {
         </Grid>
         <Grid container spacing={3} >
             {todolists.map(tl => {
-                    let tasksForTodolist = tasks[tl.todolistId]
+                    let tasksForTodolist = tasks[tl.id]
                     if (tl.filter === 'completed') {
-                      tasksForTodolist = tasks[tl.todolistId].filter(t => t.status === TaskStatuses.Completed)
+                      tasksForTodolist = tasks[tl.id].filter(t => t.status === TaskStatuses.Completed)
                     } else if (tl.filter === 'active') {
-                      tasksForTodolist = tasks[tl.todolistId].filter(t => t.status === TaskStatuses.New)
+                      tasksForTodolist = tasks[tl.id].filter(t => t.status === TaskStatuses.New)
                     }
                     return  <Grid item>
                         <Paper style={{padding: '10px'}}>
                           <TodolistOld 
-                      key={tl.todolistId}
-                      todolistID={tl.todolistId}
+                      key={tl.id}
+                      todolistID={tl.id}
                       removeTodolist={removeTodolist}
                       changeTaskTitle={changeTaskTitle}
                       changeTodolistTitle={changeTodolistTitle}
