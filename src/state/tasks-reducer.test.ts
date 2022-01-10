@@ -1,4 +1,4 @@
-import { removeTaskAC, tasksReducer, addTaskAC, changeTaskStatusAC, changeTaskTitleAC, setTasksAC } from './tasks-reducer';
+import { removeTaskAC, tasksReducer, addTaskAC, changeTaskTitleAC, setTasksAC, updateTaskAC } from './tasks-reducer';
 import {TasksStateType} from '../App';
 import { addTodolistAC, removeTodolistAC, setTodolistsAC } from './todolists-reducer';
 import { TaskPriorities, TaskStatuses } from '../api/todolist-api';
@@ -67,7 +67,7 @@ test('correct task should be added to correct array', () => {
    })
 
    test('status of specified task should be changed', () => {
-    const action = changeTaskStatusAC("2", 0, "todolistId2");
+    const action = updateTaskAC("2", {status: 0}, "todolistId2");
     const endState = tasksReducer(startState, action)
  
     expect(endState["todolistId2"][1].status).toBe(0);
@@ -75,7 +75,7 @@ test('correct task should be added to correct array', () => {
   });
  
   test('title of specified task should be changed', () => {
-    const action = changeTaskTitleAC("2", "kefir", "todolistId2");
+    const action = updateTaskAC("2", {title: "kefir"}, "todolistId2");
     const endState = tasksReducer(startState, action)
  
     expect(endState["todolistId2"][1].title).toBe("kefir");
@@ -83,7 +83,12 @@ test('correct task should be added to correct array', () => {
   });
  
   test('new array should be added when new todolist is added', () => {
-  const action = addTodolistAC("new todolist");
+  const action = addTodolistAC({
+    id: 'string',
+    title: 'new todolist',
+    order: 0,
+    addedDate: ''
+  });
   const endState = tasksReducer(startState, action)
 
   const keys = Object.keys(endState);

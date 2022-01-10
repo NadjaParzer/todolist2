@@ -10,7 +10,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { addTodolistAC, changeTodolistFilterAC, changeTodolistTitleAC, fetchTodolistsTC, FilterValuesType, removeTodolistAC, TodolistDomainType } from './state/todolists-reducer';
+import { addTodolistAC, addTodolistTC, changeTodolistFilterAC, changeTodolistTitleAC, changeTodolistTitleTC, fetchTodolistsTC, FilterValuesType, removeTodolistAC, removeTodolistTC, TodolistDomainType } from './state/todolists-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from './state/store';
 import { TaskType} from './api/todolist-api';
@@ -31,16 +31,16 @@ function AppWithRedux() {
   }, [])
 
   const removeTodolist = useCallback((todolistID: string) => {
-    const action = removeTodolistAC(todolistID)
+    const action = removeTodolistTC(todolistID)
     dispatch(action)
   }, [dispatch])
-  
+
   const changeTodolistTitle = useCallback((newTitle: string, todolistID: string) => {
-    dispatch(changeTodolistTitleAC(newTitle, todolistID))
+    dispatch(changeTodolistTitleTC(newTitle, todolistID))
   }, [dispatch])
 
   const addTodolist = useCallback((title: string) => {
-    const action = addTodolistAC(title)
+    const action = addTodolistTC(title)
     dispatch(action)
   }, [dispatch])
 

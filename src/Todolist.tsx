@@ -8,9 +8,9 @@ import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from './state/store';
-import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, fetchTasksTC, removeTaskTC } from './state/tasks-reducer';
+import { fetchTasksTC, removeTaskTC, addTaskTC, updateTaskTC } from './state/tasks-reducer';
 import { FilterValuesType } from './state/todolists-reducer';
-import { TaskType, todolistAPI } from './api/todolist-api';
+import { TaskType } from './api/todolist-api';
 
 type PropsType = {
   todolistID: string,
@@ -37,15 +37,15 @@ export const Todolist = React.memo((props: PropsType) => {
   }, [dispatch, props.todolistID])
 
   const onChangeHandler = useCallback((taskId, status ) => {
-    dispatch(changeTaskStatusAC(taskId, status, props.todolistID))
+    dispatch(updateTaskTC(taskId, {status}, props.todolistID))
   }, [dispatch, props.todolistID])
 
   const onChangeTitle = useCallback((taskId, title) => {
-    dispatch(changeTaskTitleAC(taskId, title, props.todolistID))
+    dispatch(updateTaskTC(taskId, {title}, props.todolistID))
   },[dispatch, props.todolistID])
 
   const addTask = useCallback((title: string) => {
-    const action = addTaskAC(title, props.todolistID)
+    const action = addTaskTC(props.todolistID, title)
     dispatch(action)
   }, [dispatch,  props.todolistID])
 

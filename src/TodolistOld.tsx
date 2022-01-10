@@ -7,9 +7,6 @@ import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppRootState } from './state/store';
-import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC } from './state/tasks-reducer';
 import { TaskStatuses, TaskType } from './api/todolist-api';
 import { FilterValuesType } from './state/todolists-reducer';
 

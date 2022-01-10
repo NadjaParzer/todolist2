@@ -1,5 +1,6 @@
 
 
+
 import axios from 'axios';
 
 export type TodolistType = {
@@ -74,7 +75,7 @@ export const todolistAPI = {
       return promise
   },
   createTodolists(title: string) {
-    const promise = instance.post<ResponseType>('todo-lists', { title: title })
+    const promise = instance.post<ResponseType<{item: TodolistType}>>('todo-lists', { title: title })
     return promise
   },
   deleteTodolist(todolistId: string) {
@@ -86,7 +87,7 @@ export const todolistAPI = {
     return promise
   },
   createTask(todolistId: string, title: string) {
-    return instance.post(`todo-lists/${todolistId}/tasks`, {title: title})
+    return instance.post<ResponseType<{item: TaskType}>>(`todo-lists/${todolistId}/tasks`, {title: title})
   },
   deleteTask(todolistId: string, taskId: string) {
     return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`)

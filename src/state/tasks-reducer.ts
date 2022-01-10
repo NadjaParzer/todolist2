@@ -1,3 +1,5 @@
+import { AppRootState } from './store';
+import { UpdateTaskModelType } from './../api/todolist-api';
 import { AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType, todolistID1, todolistID2 } from './todolists-reducer';
 import { TasksStateType } from './../App';
 import {v1} from 'uuid';
@@ -24,11 +26,11 @@ type ChangeTaskTitleActionType = {
   title: string
   todolistId: string
 }
-type ChangeTaskStatusActionType = {
-  type: 'CHANGE-TASK-STATUS',
+type UpdateTaskActionType = {
+  type: 'UPDATE-TASK',
   todolistId: string,
   taskId: string
-  status: number
+  model: UpdateDomainTaskModelType
 }
 export type SetTasksActionType = {
   type: 'SET-TASKS'
@@ -37,7 +39,7 @@ export type SetTasksActionType = {
 }
 
 type ActionsType = RemoveTaskActionType | AddTaskActionType 
-                   | ChangeTaskTitleActionType | ChangeTaskStatusActionType 
+                   | ChangeTaskTitleActionType | UpdateTaskActionType 
                    | AddTodolistActionType | RemoveTodolistActionType 
                    | SetTodolistsActionType | SetTasksActionType
 
@@ -50,8 +52,8 @@ export const addTaskAC = ( task: TaskType): AddTaskActionType => {
 export const changeTaskTitleAC = (taskId: string, title: string, todolistId: string): ChangeTaskTitleActionType => {
   return { type: 'CHANGE-TASK-TITLE', title, taskId, todolistId }
 }
-export const changeTaskStatusAC = ( taskId: string, status: number, todolistId: string): ChangeTaskStatusActionType => {
-  return { type: 'CHANGE-TASK-STATUS', todolistId, taskId, status }
+export const updateTaskAC = ( taskId: string, model: UpdateDomainTaskModelType, todolistId: string): UpdateTaskActionType => {
+  return { type: 'UPDATE-TASK', todolistId, taskId, model }
 }
 export const setTasksAC = (todolistId: string, tasks: Array<TaskType>): SetTasksActionType => {
   return {type: 'SET-TASKS', todolistId, tasks}
@@ -78,8 +80,44 @@ export const addTaskTC = (todolistId: string, title: string) => {
   return (dispatch: Dispatch) => {
     todolistAPI.createTask(todolistId, title)
     .then( res => {
-      dispatch(addTaskAC(res.data.item))
+      let task = res.data.data.item
+      dispatch(addTaskAC(task))
     })
+  }
+}
+export type UpdateDomainTaskModelType = {
+  title?: string
+  description?: string
+  completed?: boolean
+  status?: number
+  priority?: number
+  startDate?: string
+  deadline?: string
+}
+export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string) => {
+  return (dispatch: Dispatch, getState: ()=>  AppRootState) => {
+    const state = getState()
+    let task = state.tasks[todolistId].find(t => t.id === taskId)
+    if (!task) {
+      //throw new Error('task is not found')
+      console.warn('task is not found in the state!')
+      return
+    }
+    const apiModel: UpdateTaskModelType = {
+      completed: task.completed,
+      description: task.description,
+      status: task.status,
+      priority: task.priority,
+      startDate: task.startDate,
+      deadline: task.deadline,
+      title: task.title,
+      ...domainModel
+    }
+    todolistAPI.updateTask(todolistId, taskId, apiModel).then(
+      res => {
+        dispatch(updateTaskAC(taskId, domainModel, todolistId))
+      }
+    )
   }
 }
 
@@ -134,15 +172,15 @@ export const tasksReducer = (state: TasksStateType=initialState, action: Actions
       // stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId ? {...t, title: action.title} : t)
       // return stateCopy
     }
-    case 'CHANGE-TASK-STATUS': {
+    case 'UPDATE-TASK': {
       const stateCopy = {...state}
       let tasks = stateCopy[action.todolistId]
-      stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId ? {...t, status: action.status} : t)
+      stateCopy[action.todolistId] = tasks.map(t => t.id === action.taskId ? {...t, ...action.model} : t)
       return stateCopy
     }
     case 'ADD-TODOLIST': {
       let stateCopy = {...state}
-      stateCopy[action.todolistId] = []
+      stateCopy[action.todolist.id] = []
       return stateCopy
     }
     case 'REMOVE-TODOLIST': {
