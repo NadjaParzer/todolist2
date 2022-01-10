@@ -1,6 +1,3 @@
-
-
-
 import axios from 'axios';
 
 export type TodolistType = {
@@ -15,7 +12,6 @@ type ResponseType<Data={}> = {
   fieldsErrors: Array<string>
   data: Data
 }
-
 export enum TaskStatuses {
   New = 0,
   InProgress = 1,
@@ -61,7 +57,7 @@ const instance = axios.create({
   baseURL: 'https://social-network.samuraijs.com/api/1.1/',
   withCredentials: true,
   headers: {
-       'API-KEY': '0953c110-2e83-40a7-8c09-25e99de87d0b'
+    'API-KEY': '0953c110-2e83-40a7-8c09-25e99de87d0b'
   }
 })
 
@@ -95,5 +91,4 @@ export const todolistAPI = {
   updateTask(todolistId: string, taskId: string, model:UpdateTaskModelType) {
     return instance.put<ResponseType<{item: UpdateTaskModelType}>>(`todo-lists/${todolistId}/tasks/${taskId}`, model)
   }
-
 }
