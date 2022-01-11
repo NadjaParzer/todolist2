@@ -1,10 +1,13 @@
-import { AppRootState } from './store';
-import { UpdateTaskModelType } from './../api/todolist-api';
+import { AppRootState } from '../../app/store';
+import { UpdateTaskModelType } from '../../api/todolist-api';
 import { AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType, todolistID1, todolistID2 } from './todolists-reducer';
-import { TasksStateType } from './../App';
 import {v1} from 'uuid';
-import { TaskPriorities, TaskStatuses, TaskType, todolistAPI } from '../api/todolist-api';
+import { TaskPriorities, TaskStatuses, TaskType, todolistAPI } from '../../api/todolist-api';
 import { Dispatch } from 'redux';
+
+export type TasksStateType = {
+  [key: string]: Array<TaskType>
+}
 
 // type ActionType = {
 //   type: string,

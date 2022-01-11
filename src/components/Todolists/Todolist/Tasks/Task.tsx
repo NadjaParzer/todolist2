@@ -1,10 +1,10 @@
 import React, { ChangeEvent} from 'react';
-import { Editablespan } from './Editablespan';
+import { Editablespan } from '../../../common/Editablespan';
 import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Checkbox from '@material-ui/core/Checkbox';
 import ListItem from '@material-ui/core/ListItem';
-import { TaskType } from './api/todolist-api';
+import { TaskType } from '../../../../api/todolist-api';
 
 
 type TaskPropsType = {

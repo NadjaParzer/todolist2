@@ -1,6 +1,7 @@
-import { AddItemForm } from "./AddItemForm";
+
 import React from 'react';
 import {action} from '@storybook/addon-actions'
+import { AddItemForm } from '../../components/common/AddItemForm';
 
 
 export default {

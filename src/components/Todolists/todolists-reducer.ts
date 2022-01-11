@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import {v1} from 'uuid';
-import { todolistAPI, TodolistType } from "../api/todolist-api";
+import { todolistAPI, TodolistType } from "../../api/todolist-api";
 
 export type FilterValuesType = 'all' | 'completed' | 'active'
 export type TodolistDomainType = TodolistType & {filter: FilterValuesType}
