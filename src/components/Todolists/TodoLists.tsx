@@ -1,22 +1,25 @@
 import React, { useCallback, useEffect } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import { addTodolistTC, changeTodolistFilterAC, changeTodolistTitleTC, fetchTodolistsTC, FilterValuesType, removeTodolistTC, TodolistDomainType } from './todolists-reducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from '../../app/store';
 import { Todolist } from './Todolist/Todolist';
 import { AddItemForm } from '../common/AddItemForm';
+import { Grid, Paper } from '@mui/material';
 
 type TodoListsDomainType = {
+  demo?: boolean
 }
 
 
-export const TodoLists = (props: TodoListsDomainType) => {
+export const TodoLists = ({demo, ...props}: TodoListsDomainType) => {
   const dispatch = useDispatch()
   const todolists = useSelector<AppRootState, Array<TodolistDomainType>>((state) => state.todolists)
   //const [filter, setFilter] = useState<FilterValuesType>('all')
 
   useEffect(() => {
+    if(demo) {
+      return
+    }
     dispatch(fetchTodolistsTC())
   }, [])
 

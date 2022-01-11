@@ -1,7 +1,6 @@
+import { AddBox } from '@mui/icons-material';
+import { IconButton, TextField } from '@mui/material';
 import React, { ChangeEvent, KeyboardEvent, useState } from 'react';
-import {IconButton} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import AddBoxIcon from '@material-ui/icons/AddBox';
 
 type AddItemPropsType = {
   addItem: (title: string) => void
@@ -38,7 +37,7 @@ console.log('ADDItemForm is called!')
       <TextField variant='outlined' label={'Type value'} value={title} onChange={onChangeHanle} 
                  helperText={error} error={!!error} onKeyPress={onKeyPressHandler} />
                  <IconButton color='primary' >
-                 <AddBoxIcon onClick={addTask}/> !!!
+                 <AddBox onClick={addTask}/> !!!
                  </IconButton>
       
     </div>

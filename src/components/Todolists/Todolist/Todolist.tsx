@@ -2,15 +2,14 @@ import React, {useCallback, useEffect } from 'react';
 import { AddItemForm } from '../../common/AddItemForm';
 import {Task} from './Tasks/Task'
 import { Editablespan } from '../../common/Editablespan';
-import { IconButton } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from '../../../app/store';
 import { fetchTasksTC, removeTaskTC, addTaskTC, updateTaskTC } from '../tasks-reducer';
 import { FilterValuesType } from '../todolists-reducer';
 import { TaskType } from '../../../api/todolist-api';
+import { Delete } from '@mui/icons-material';
+import IconButton from '@mui/material/IconButton';
+import { Button, List } from '@mui/material';
 
 type PropsType = {
   todolistID: string,
@@ -19,15 +18,18 @@ type PropsType = {
   filter: FilterValuesType,
   removeTodolist: (todolistID: string) => void,
   changeTodolistTitle: (title: string, todolistID: string) => void
-
+  demo?: boolean
 }
 
-export const Todolist = React.memo((props: PropsType) => {
+export const Todolist = React.memo(({demo=false, ...props}: PropsType) => {
   console.log('TODOLIST is called!', props.todolistID)
   const dispatch = useDispatch()
   const tasks = useSelector<AppRootState, Array<TaskType>>((state) => state.tasks[props.todolistID])
 
   useEffect(() => {
+    if(demo) {
+      return
+    }
     console.log('TODOLISTID', props.todolistID)
     dispatch(fetchTasksTC(props.todolistID))
   }, [])
@@ -77,7 +79,7 @@ export const Todolist = React.memo((props: PropsType) => {
       <h3>
         <Editablespan title={props.title} onChange={changeTodolistTitle} />
         <IconButton onClick={() => props.removeTodolist(props.todolistID)}>
-          <DeleteIcon />
+          <Delete />
         </IconButton></h3>
       <AddItemForm addItem={addTask} />
       <List>

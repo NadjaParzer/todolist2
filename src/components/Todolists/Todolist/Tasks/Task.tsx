@@ -1,10 +1,8 @@
 import React, { ChangeEvent} from 'react';
 import { Editablespan } from '../../../common/Editablespan';
-import { IconButton } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Checkbox from '@material-ui/core/Checkbox';
-import ListItem from '@material-ui/core/ListItem';
 import { TaskType } from '../../../../api/todolist-api';
+import { Checkbox, IconButton, ListItem } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 
 
 type TaskPropsType = {
@@ -33,7 +31,7 @@ type TaskPropsType = {
       <Checkbox onChange={changeTaskStatus} checked={props.task.status === 2} />
       <Editablespan onChange={changeTaskTitle} title={props.task.title} />
       <IconButton onClick={() => props.removeTask(props.task.id)}>
-        <DeleteIcon />
+        <Delete />
       </IconButton>
     </ListItem >
   })
