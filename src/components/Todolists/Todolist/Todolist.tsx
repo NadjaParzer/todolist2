@@ -24,13 +24,12 @@ export const Todolist = React.memo(({demo=false, ...props}: PropsType) => {
   const dispatch = useDispatch()
   const tasks = useSelector<AppRootState, Array<TaskType>>((state) => state.tasks[props.todolist.id])
 
-  useEffect(() => {
-    if(demo) {
-      return
-    }
-    console.log('TODOLISTID', props.todolist.id)
-    dispatch(fetchTasksTC(props.todolist.id))
-  }, [])
+  // useEffect(() => {
+  //   if(demo) {
+  //     return
+  //   }
+  //   dispatch(fetchTasksTC(props.todolist.id))
+  // }, [])
 
   const removeTask = useCallback((id: string) => {
    dispatch(removeTaskTC(props.todolist.id, id))

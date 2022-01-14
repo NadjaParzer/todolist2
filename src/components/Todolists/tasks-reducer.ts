@@ -1,7 +1,7 @@
 import { SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType, RequestStatusType } from './../../app/app-reducer';
 import { AppRootState } from '../../app/store';
 import { UpdateTaskModelType } from '../../api/todolist-api';
-import { AddTodolistActionType, RemoveTodolistActionType, SetTodolistsActionType, todolistID1, todolistID2 } from './todolists-reducer';
+import { AddTodolistActionType, ClearTodoDataType, RemoveTodolistActionType, SetTodolistsActionType, todolistID1, todolistID2 } from './todolists-reducer';
 import {v1} from 'uuid';
 import { TaskPriorities, TaskStatuses, TaskType, todolistAPI } from '../../api/todolist-api';
 import { Dispatch } from 'redux';
@@ -17,15 +17,17 @@ export type TasksStateType = {
 //   [key: string]: any
 // }
 // types
+export type SetTaskType = ReturnType<typeof setTasksAC> 
 type ActionsType = ReturnType<typeof removeTaskAC>
   | ReturnType<typeof addTaskAC>
   | ReturnType<typeof changeTaskTitleAC>
   | ReturnType<typeof updateTaskAC>
-  | ReturnType<typeof setTasksAC>
+  | SetTaskType
   | ReturnType<typeof changeTaskEntityStatus>
   | AddTodolistActionType
   | RemoveTodolistActionType
   | SetTodolistsActionType
+  | ClearTodoDataType
 export type UpdateDomainTaskModelType = {
   title?: string
   description?: string
@@ -35,6 +37,7 @@ export type UpdateDomainTaskModelType = {
   startDate?: string
   deadline?: string
 }
+//export type FetchTasksType = ReturnType<typeof fetchTasksTC>
 // actions
 export const removeTaskAC = (taskId: string, id: string) => ({ type: 'REMOVE-TASK',taskId, id} as const)
 export const addTaskAC = ( task: TaskType) => ({ type: 'ADD-TASK', task} as const)
@@ -119,14 +122,14 @@ export const updateTaskTC = (taskId: string, domainModel: UpdateDomainTaskModelT
   }
 
 const initialState:TasksStateType = {
-  [todolistID1]: [{ id: v1(), title: 'CSS', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' },
-  { id: v1(), title: 'JS', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' },
-  { id: v1(), title: 'React', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' },
-  { id: v1(), title: 'Vui', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' }],
-  [todolistID2]: [
-    { id: v1(), title: 'Milk', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' },
-  { id: v1(), title: 'Bread', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'' , entityStatus: 'idle'},
-  ]
+  // [todolistID1]: [{ id: v1(), title: 'CSS', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' },
+  // { id: v1(), title: 'JS', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' },
+  // { id: v1(), title: 'React', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' },
+  // { id: v1(), title: 'Vui', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' }],
+  // [todolistID2]: [
+  //   { id: v1(), title: 'Milk', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'', entityStatus: 'idle' },
+  // { id: v1(), title: 'Bread', status: TaskStatuses.Completed,todoListId: todolistID2, completed: false, description:'', priority: TaskPriorities.Middle, startDate: '', deadline:'', order: 1, addedDate:'' , entityStatus: 'idle'},
+  // ]
 }
 
 export const tasksReducer = (state: TasksStateType=initialState, action: ActionsType): TasksStateType => {
@@ -186,6 +189,8 @@ export const tasksReducer = (state: TasksStateType=initialState, action: Actions
       delete stateCopy[action.id] 
       return stateCopy
     }
+    case 'CLEAR-TODOLISTS':
+      return {}
     default: 
     return state
     //throw new Error('Failed action type!')
