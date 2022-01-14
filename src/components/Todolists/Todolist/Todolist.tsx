@@ -5,95 +5,93 @@ import { Editablespan } from '../../common/Editablespan';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from '../../../app/store';
 import { fetchTasksTC, removeTaskTC, addTaskTC, updateTaskTC } from '../tasks-reducer';
-import { FilterValuesType } from '../todolists-reducer';
+import { FilterValuesType, TodolistDomainType } from '../todolists-reducer';
 import { TaskType } from '../../../api/todolist-api';
 import { Delete } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 import { Button, List } from '@mui/material';
 
 type PropsType = {
-  todolistID: string,
-  title: string,
-  changeFilter: (value: FilterValuesType, todolistID: string) => void,
-  filter: FilterValuesType,
-  removeTodolist: (todolistID: string) => void,
+  todolist: TodolistDomainType
+  changeFilter: (value: FilterValuesType, todolistID: string) => void
+  removeTodolist: (todolistID: string) => void
   changeTodolistTitle: (title: string, todolistID: string) => void
   demo?: boolean
 }
 
 export const Todolist = React.memo(({demo=false, ...props}: PropsType) => {
-  console.log('TODOLIST is called!', props.todolistID)
+  console.log('TODOLIST is called!', props.todolist.id)
   const dispatch = useDispatch()
-  const tasks = useSelector<AppRootState, Array<TaskType>>((state) => state.tasks[props.todolistID])
+  const tasks = useSelector<AppRootState, Array<TaskType>>((state) => state.tasks[props.todolist.id])
 
   useEffect(() => {
     if(demo) {
       return
     }
-    console.log('TODOLISTID', props.todolistID)
-    dispatch(fetchTasksTC(props.todolistID))
+    console.log('TODOLISTID', props.todolist.id)
+    dispatch(fetchTasksTC(props.todolist.id))
   }, [])
 
   const removeTask = useCallback((id: string) => {
-   dispatch(removeTaskTC(props.todolistID, id))
-  }, [dispatch, props.todolistID])
+   dispatch(removeTaskTC(props.todolist.id, id))
+  }, [dispatch, props.todolist.id])
 
   const onChangeHandler = useCallback((taskId, status ) => {
-    dispatch(updateTaskTC(taskId, {status}, props.todolistID))
-  }, [dispatch, props.todolistID])
+    dispatch(updateTaskTC(taskId, {status}, props.todolist.id))
+  }, [dispatch, props.todolist.id])
 
   const onChangeTitle = useCallback((taskId, title) => {
-    dispatch(updateTaskTC(taskId, {title}, props.todolistID))
-  },[dispatch, props.todolistID])
+    dispatch(updateTaskTC(taskId, {title}, props.todolist.id))
+  },[dispatch, props.todolist.id])
 
   const addTask = useCallback((title: string) => {
-    const action = addTaskTC(props.todolistID, title)
+    const action = addTaskTC(props.todolist.id, title)
     dispatch(action)
-  }, [dispatch,  props.todolistID])
+  }, [dispatch,  props.todolist.id])
 
   const onAllClickHandle = useCallback(() => {
-    props.changeFilter('all', props.todolistID)
-  }, [props.changeFilter, props.todolistID])
+    props.changeFilter('all', props.todolist.id)
+  }, [props.changeFilter, props.todolist.id])
   const onActiveClickHandle = useCallback(() => {
-    props.changeFilter('active', props.todolistID)
-  }, [props.changeFilter, props.todolistID])
+    props.changeFilter('active', props.todolist.id)
+  }, [props.changeFilter, props.todolist.id])
   const onCompletedClickHandle = useCallback(() => {
-    props.changeFilter('completed', props.todolistID)
-  }, [props.changeFilter, props.todolistID])
+    props.changeFilter('completed', props.todolist.id)
+  }, [props.changeFilter, props.todolist.id])
   // const removeTodolist = () => {
   //   props.removeTodolist(props.todolistID)
   // }
   const changeTodolistTitle = useCallback((title: string) => {
-    props.changeTodolistTitle(title, props.todolistID)
-  }, [props.changeTodolistTitle, props.todolistID])
+    props.changeTodolistTitle(title, props.todolist.id)
+  }, [props.changeTodolistTitle, props.todolist.id])
 
   let tasksForTodolist = tasks
-  if (props.filter === 'completed') {
+  if (props.todolist.filter === 'completed') {
     tasksForTodolist = tasks.filter(t => t.status === 2)
-  } else if (props.filter === 'active') {
+  } else if (props.todolist.filter === 'active') {
     tasksForTodolist = tasks.filter(t => t.status === 0)
   }
 
   return (
     <div>
       <h3>
-        <Editablespan title={props.title} onChange={changeTodolistTitle} />
-        <IconButton onClick={() => props.removeTodolist(props.todolistID)}>
+        <Editablespan title={props.todolist.title} onChange={changeTodolistTitle} disabled={props.todolist.entityStatus === 'loading'} />
+        <IconButton onClick={() => props.removeTodolist(props.todolist.id)} disabled={props.todolist.entityStatus === 'loading'} >
           <Delete />
         </IconButton></h3>
-      <AddItemForm addItem={addTask} />
+      <AddItemForm addItem={addTask} disabled={props.todolist.entityStatus === 'loading'} />
       <List>
         {
-          tasksForTodolist.map((t) => <Task task={t} todolistID={props.todolistID}
+          tasksForTodolist.map((t) => <Task disabled={props.todolist.entityStatus === 'loading'} task={t} todolistID={props.todolist.id}
             changeTaskTitle={onChangeTitle}
             key={t.id}
             removeTask={removeTask} changeTaskStatus={onChangeHandler} />)
         }
       </List>
       <div>
-        <Button variant={props.filter === 'all' ? 'contained' : 'text'} onClick={onAllClickHandle}>All</Button>
-        <Button color='primary' variant={props.filter === 'active' ? 'contained' : 'text'} onClick={onActiveClickHandle}>Active</Button>
-        <Button color='secondary' variant={props.filter === 'completed' ? 'contained' : 'text'} onClick={onCompletedClickHandle}>Completed</Button>
+        <Button variant={props.todolist.filter === 'all' ? 'contained' : 'text'} onClick={onAllClickHandle}>All</Button>
+        <Button color='primary' variant={props.todolist.filter === 'active' ? 'contained' : 'text'} onClick={onActiveClickHandle}>Active</Button>
+        <Button color='secondary' variant={props.todolist.filter === 'completed' ? 'contained' : 'text'} onClick={onCompletedClickHandle}>Completed</Button>
       </div>
     </div>
   )

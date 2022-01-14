@@ -4,9 +4,10 @@ import React, { ChangeEvent, KeyboardEvent, useState } from 'react';
 
 type AddItemPropsType = {
   addItem: (title: string) => void
+  disabled?: boolean
 }
 
-export const AddItemForm = React.memo((props: AddItemPropsType) => {
+export const AddItemForm = React.memo(( {addItem, disabled = false}: AddItemPropsType) => {
 console.log('ADDItemForm is called!')
   let [title, setTitle] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -20,7 +21,7 @@ console.log('ADDItemForm is called!')
     }
    
     if (e.charCode === 13) {
-      props.addItem(title)
+      addItem(title)
       setTitle('')
     }
   }
@@ -29,14 +30,14 @@ console.log('ADDItemForm is called!')
       setError('Title is required!')
       return;
     }
-    props.addItem(title)
+    addItem(title)
     setTitle('')
   }
   return (
     <div>
       <TextField variant='outlined' label={'Type value'} value={title} onChange={onChangeHanle} 
-                 helperText={error} error={!!error} onKeyPress={onKeyPressHandler} />
-                 <IconButton color='primary' >
+                 helperText={error} error={!!error} onKeyPress={onKeyPressHandler} disabled={disabled} />
+                 <IconButton color='primary' disabled={disabled} >
                  <AddBox onClick={addTask}/> !!!
                  </IconButton>
       

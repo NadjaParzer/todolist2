@@ -5,19 +5,20 @@ import { AppRootState } from '../../app/store';
 import { Todolist } from './Todolist/Todolist';
 import { AddItemForm } from '../common/AddItemForm';
 import { Grid, Paper } from '@mui/material';
+import { Navigate } from 'react-router';
 
 type TodoListsDomainType = {
   demo?: boolean
 }
 
-
-export const TodoLists = ({demo, ...props}: TodoListsDomainType) => {
+export const TodoLists = ({ demo, ...props }: TodoListsDomainType) => {
   const dispatch = useDispatch()
   const todolists = useSelector<AppRootState, Array<TodolistDomainType>>((state) => state.todolists)
   //const [filter, setFilter] = useState<FilterValuesType>('all')
-
+  const isLoggedIn = useSelector<AppRootState, boolean>(state => state.auth.isLoggedIn)
+ 
   useEffect(() => {
-    if(demo) {
+    if (demo || !isLoggedIn) {
       return
     }
     dispatch(fetchTodolistsTC())
@@ -40,25 +41,31 @@ export const TodoLists = ({demo, ...props}: TodoListsDomainType) => {
   const changeFilter = useCallback((value: FilterValuesType, todolistID: string) => {
     const action = changeTodolistFilterAC(value, todolistID)
     dispatch(action)
-     console.log('action', action)
+    console.log('action', action)
   }, [dispatch])
+
+  if(!isLoggedIn) {
+    return <Navigate to={'/login'} />
+  }
+  
   return <>
-       <Grid style={{ padding: '20px' }} container>
-          <AddItemForm addItem={addTodolist} />
+    <Grid style={{ padding: '20px' }} container>
+      <AddItemForm addItem={addTodolist} />
+    </Grid>
+    <Grid container spacing={3} >
+      {todolists.map(tl => {
+        return <Grid item>
+          <Paper style={{ padding: '10px' }}>
+            <Todolist
+              demo={demo}
+              key={tl.id}
+              todolist={tl}
+              removeTodolist={removeTodolist}
+              changeTodolistTitle={changeTodolistTitle}
+              changeFilter={changeFilter} />
+          </Paper>
         </Grid>
-        <Grid container spacing={3} >
-          {todolists.map(tl => {
-            return <Grid item>
-              <Paper style={{ padding: '10px' }}>
-                <Todolist
-                  key={tl.id}
-                  todolistID={tl.id}
-                  removeTodolist={removeTodolist}
-                  changeTodolistTitle={changeTodolistTitle}
-                  changeFilter={changeFilter} filter={tl.filter} title={tl.title} />
-              </Paper>
-            </Grid>
-          })}
-        </Grid>
+      })}
+    </Grid>
   </>
 }

@@ -1,7 +1,8 @@
 import { Dispatch } from 'redux';
 import {v1} from 'uuid';
 import { todolistAPI, TodolistType } from "../../api/todolist-api";
-import { RequestStatusType, setStatusAC, SetStatusActionType } from '../../app/app-reducer';
+import { RequestStatusType, SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType } from '../../app/app-reducer';
+import { handleServerNetworkError } from '../../utils/errorUtils/handleServerNetworkError';
 
 export type FilterValuesType = 'all' | 'completed' | 'active'
 export type TodolistDomainType = TodolistType & {filter: FilterValuesType} & {entityStatus: RequestStatusType }
@@ -12,7 +13,8 @@ type ActionsType = RemoveTodolistActionType | AddTodolistActionType
                    | SetTodolistsActionType
                    | ReturnType<typeof changeTodolistTitleAC>
                    | ReturnType<typeof changeTodolistFilterAC>
-type ThunkDispatch = Dispatch<ActionsType | SetStatusActionType>                  
+                   | ReturnType<typeof changeTodolistEntityStatus>
+type ThunkDispatch = Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>                  
 // action
 export const removeTodolistAC = (id: string) =>
   ({ type: 'REMOVE-TODOLIST', id } as const)
@@ -24,35 +26,52 @@ export const changeTodolistFilterAC = (filter: FilterValuesType, id: string) =>
   ({ type: 'CHANGE-TODOLIST-FILTER', filter, id } as const)
 export const setTodolistsAC = (todolists: Array<TodolistType>) =>
   ({ type: 'SET-TODOLISTS', todolists } as const)
+export const changeTodolistEntityStatus = (status: RequestStatusType, id: string) =>
+({ type: 'CHANGE-TODOLIST-ENTITY-STATUS', status, id } as const)
   
 
 // thunks
 export const fetchTodolistsTC = () => (dispatch: ThunkDispatch) => {
-  dispatch(setStatusAC('loading'))
+  dispatch(setAppStatusAC('loading'))
     todolistAPI.getTodolists()
     .then((res) => {
     dispatch(setTodolistsAC(res.data))
-    dispatch(setStatusAC('succeeded'))
+    dispatch(setAppStatusAC('succeeded'))
+  })
+  .catch(error => {
+    handleServerNetworkError(error.message, dispatch)
   })
   }
-export const removeTodolistTC = (id: string) => (dispatch: Dispatch<ActionsType>) => {
-    todolistAPI.deleteTodolist(id).then((res) => {
-      dispatch(removeTodolistAC(id))
-    })
-  }
+export const removeTodolistTC = (id: string) => (dispatch: ThunkDispatch) => {
+  dispatch(setAppStatusAC('loading'))
+  dispatch(changeTodolistEntityStatus('loading', id))
+  todolistAPI.deleteTodolist(id).then((res) => {
+    dispatch(removeTodolistAC(id))
+    dispatch(setAppStatusAC('succeeded'))
+  })
+  .catch(error => {
+    handleServerNetworkError(error.message, dispatch)
+  })
+}
 export const addTodolistTC = (title: string) => (dispatch: ThunkDispatch) => {
-  dispatch(setStatusAC('loading'))
+  dispatch(setAppStatusAC('loading'))
     todolistAPI.createTodolists(title).then((res) => {
       dispatch(addTodolistAC(res.data.data.item))
-      dispatch(setStatusAC('succeeded'))
+      dispatch(setAppStatusAC('succeeded'))
+    })
+    .catch(error => {
+      handleServerNetworkError(error.message, dispatch)
     })
   }
-export const changeTodolistTitleTC = (title: string, id: string) => (dispatch: Dispatch<ActionsType>) => {
+export const changeTodolistTitleTC = (title: string, id: string) => (dispatch: ThunkDispatch) => {
     todolistAPI.updateTodolist(id, title).then(
       res => {
         dispatch(changeTodolistTitleAC(title, id))
       }
     )
+    .catch(error => {
+      handleServerNetworkError(error.message, dispatch)
+    })
   }
 
 export let todolistID1 = v1()
@@ -75,6 +94,8 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
       return state.map(tl => tl.id === action.id ? {...tl, title: action.title} : tl)
     case 'CHANGE-TODOLIST-FILTER': 
       return state.map(tl => tl.id === action.id ? {...tl, filter: action.filter} : tl)
+    case 'CHANGE-TODOLIST-ENTITY-STATUS':
+      return state.map(tl => tl.id === action.id ? {...tl, entityStatus: action.status} : tl)
     default: 
     return state
     // throw new Error('Failed action type!')

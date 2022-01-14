@@ -1,3 +1,4 @@
+import { authReducer } from './../components/Login/auth-reducer';
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import thunk from "redux-thunk";
 import { tasksReducer } from "../components/Todolists/tasks-reducer";
@@ -8,7 +9,8 @@ import { appReducer } from "./app-reducer";
 const rootReducer = combineReducers({
   todolists: todolistsReducer,
   tasks: tasksReducer,
-  app: appReducer
+  app: appReducer,
+  auth: authReducer
 })
 
 // type AppRootState = {

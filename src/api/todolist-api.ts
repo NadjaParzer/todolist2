@@ -6,7 +6,7 @@ export type TodolistType = {
   addedDate: string
   order: number
 }
-type ResponseType<Data={}> = {
+export type ResponseType<Data={}> = {
   resultCode: number
   messages: Array<string>
   fieldsErrors: Array<string>
@@ -37,6 +37,7 @@ export type TaskType = {
   todoListId: string
   order: number
   addedDate: string
+  entityStatus?: string
 }
 type TasksResponseType = {
   error: string | null
@@ -60,6 +61,26 @@ const instance = axios.create({
     'API-KEY': '0953c110-2e83-40a7-8c09-25e99de87d0b'
   }
 })
+
+export type LoginParamsType = {
+  email: string
+  password: string
+  rememberMe: boolean
+  captcha?: string
+
+}
+
+export const authAPI = {
+  login(data: LoginParamsType) {
+    return instance.post<ResponseType<{userId?: number}>>('auth/login', data)
+  },
+  logout() {
+    return instance.delete<ResponseType<{userId?: number}>>('auth/login')
+  },
+  me() {
+    return instance.get<ResponseType<{id: number, email: string, login: string}>>('auth/me')
+  }
+}
 
 export const todolistAPI = {
   getTodolists() {

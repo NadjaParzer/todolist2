@@ -11,7 +11,7 @@ type TaskPropsType = {
   removeTask: (id: string) => void
   changeTaskStatus: (taskId: string, status: number) => void
   changeTaskTitle: (taskId: string, title: string) => void
-  
+  disabled?: boolean
   }
   
   export const Task = React.memo((props: TaskPropsType) => {
@@ -28,9 +28,9 @@ type TaskPropsType = {
     }
 
     return <ListItem className={props.task.status === 2 ? 'is-done' : ''} key={props.task.id}>
-      <Checkbox onChange={changeTaskStatus} checked={props.task.status === 2} />
-      <Editablespan onChange={changeTaskTitle} title={props.task.title} />
-      <IconButton onClick={() => props.removeTask(props.task.id)}>
+      <Checkbox disabled={props.disabled || props.task.entityStatus === 'loading'} onChange={changeTaskStatus} checked={props.task.status === 2} />
+      <Editablespan disabled={props.disabled || props.task.entityStatus === 'loading'} onChange={changeTaskTitle} title={props.task.title} />
+      <IconButton disabled={props.disabled || props.task.entityStatus === 'loading'} onClick={() => props.removeTask(props.task.id)}>
         <Delete />
       </IconButton>
     </ListItem >
