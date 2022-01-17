@@ -19,7 +19,6 @@ export const setIsLoggedInAC = (value: boolean) => ({type: 'login/SET-IS-LOGGED-
 
 // thunks
 export const loginTC = (data: LoginParamsType) => (dispatch: ThunkDispatch) => {
-  debugger
   dispatch(setAppStatusAC('loading'))
   authAPI.login(data).then(res => {
     if(res.data.resultCode === 0) {

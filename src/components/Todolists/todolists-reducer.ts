@@ -39,21 +39,21 @@ export const clearTodolistsAC = () =>
 // thunks
 export const fetchTodolistsTC = () => (dispatch: any) => {
   dispatch(setAppStatusAC('loading'))
-    todolistAPI.getTodolists()
+  todolistAPI.getTodolists()
     .then((res) => {
-    dispatch(setTodolistsAC(res.data))
-    dispatch(setAppStatusAC('succeeded'))
-    return res.data
-  })
-  .then( todos => {
-    todos.forEach((todo) => {
-      dispatch(fetchTasksTC(todo.id))
+      dispatch(setTodolistsAC(res.data))
+      dispatch(setAppStatusAC('succeeded'))
+      return res.data
     })
-  })
-  .catch(error => {
-    handleServerNetworkError(error.message, dispatch)
-  })
-  }
+    .then(todos => {
+      todos.forEach((todo) => {
+        dispatch(fetchTasksTC(todo.id))
+      })
+    })
+    .catch(error => {
+      handleServerNetworkError(error.message, dispatch)
+    })
+}
 export const removeTodolistTC = (id: string) => (dispatch: ThunkDispatch) => {
   dispatch(setAppStatusAC('loading'))
   dispatch(changeTodolistEntityStatus('loading', id))
