@@ -31,8 +31,9 @@ export const Todolist = React.memo(({demo=false, ...props}: PropsType) => {
   //   dispatch(fetchTasksTC(props.todolist.id))
   // }, [])
 
-  const removeTask = useCallback((id: string) => {
-   dispatch(removeTaskTC(props.todolist.id, id))
+  const removeTask = useCallback((taskId: string) => {
+   //dispatch(removeTaskTC(props.todolist.id, id))
+   dispatch(removeTaskTC({id: props.todolist.id, taskId}))
   }, [dispatch, props.todolist.id])
 
   const onChangeHandler = useCallback((taskId, status ) => {

@@ -1,29 +1,36 @@
-import { SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType } from '../../app/app-reducer';
+
+import { setAppStatusAC } from '../../app/app-reducer';
 import { Dispatch } from "redux"
 import { authAPI, LoginParamsType } from '../../api/todolist-api';
 import { handleServerAppError } from '../../utils/errorUtils/handleServerAppError';
 import { handleServerNetworkError } from '../../utils/errorUtils/handleServerNetworkError';
-import { ClearTodoDataType, clearTodolistsAC } from '../Todolists/todolists-reducer';
+import { clearTodolistsAC } from '../Todolists/todolists-reducer';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type LoginStateType = {
-  isLoggedIn: boolean
-}
-type ActionType =  ReturnType<typeof setIsLoggedInAC>
-type ThunkDispatch = Dispatch<ActionType | SetAppErrorActionType | SetAppStatusActionType | ClearTodoDataType>
-const initialState: LoginStateType = {
+const initialState = {
   isLoggedIn: false
 }
+const slice = createSlice({
+  name: 'auth',
+  initialState: initialState,
+  reducers: {
+    setIsLoggedInAC(state, action: PayloadAction<{value: boolean}>) {
+       state.isLoggedIn = action.payload.value
+    }
+  }
+})
 
-//actions
-export const setIsLoggedInAC = (value: boolean) => ({type: 'login/SET-IS-LOGGED-IN', value} as const)
+export const setIsLoggedInAC = slice.actions.setIsLoggedInAC
+//the same witgh destructurization:
+//export const {setIsLoggedInAC} = slice.actions
 
 // thunks
-export const loginTC = (data: LoginParamsType) => (dispatch: ThunkDispatch) => {
-  dispatch(setAppStatusAC('loading'))
+export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch) => {
+  dispatch(setAppStatusAC({status :'loading'}))
   authAPI.login(data).then(res => {
     if(res.data.resultCode === 0) {
-      dispatch(setIsLoggedInAC(true))
-      dispatch(setAppStatusAC('succeeded'))
+      dispatch(setIsLoggedInAC({value: true}))
+      dispatch(setAppStatusAC({status :'loading'}))
     } else {
       handleServerAppError(res.data, dispatch)
     }
@@ -32,14 +39,13 @@ export const loginTC = (data: LoginParamsType) => (dispatch: ThunkDispatch) => {
     handleServerNetworkError(error, dispatch)
   })
 }
-
-export const logoutTC = () => (dispatch: ThunkDispatch) => {
-  dispatch(setAppStatusAC('loading'))
+export const logoutTC = () => (dispatch: Dispatch) => {
+  dispatch(setAppStatusAC({status :'loading'}))
   authAPI.logout().then(res => {
     if(res.data.resultCode === 0) {
-      dispatch(setIsLoggedInAC(false))
-      dispatch(setAppStatusAC('succeeded'))
-      dispatch(clearTodolistsAC())
+      dispatch(setIsLoggedInAC({value: false}))
+      dispatch(setAppStatusAC({status :'loading'}))
+      dispatch(clearTodolistsAC({}))
     } else {
       handleServerAppError(res.data, dispatch)
     }
@@ -49,11 +55,38 @@ export const logoutTC = () => (dispatch: ThunkDispatch) => {
   })
 }
 
-export const authReducer = (state: LoginStateType = initialState, action: ActionType): LoginStateType => {
-  switch (action.type) {
-    case 'login/SET-IS-LOGGED-IN':
-      return {...state, isLoggedIn: action.value}
-    default:
-      return state
-  }
-}
+export const authReducer = slice.reducer
+
+////////////////////////////////////////
+/////// without toolkit
+//////////////////
+
+// type LoginStateType = {
+//   isLoggedIn: boolean
+// }
+// type ActionType =  ReturnType<typeof setIsLoggedInAC>
+// type ThunkDispatch = Dispatch<ActionType | SetAppErrorActionType 
+//                      | SetAppStatusActionType | ClearTodoDataType>
+
+// const initialState: LoginStateType = {
+//   isLoggedIn: false
+// }
+// type LoginStateType = {
+//   isLoggedIn: boolean
+// }
+// type ActionType =  ReturnType<typeof setIsLoggedInAC>
+// type ThunkDispatch = Dispatch<ActionType | SetAppErrorActionType 
+//                      | SetAppStatusActionType | ClearTodoDataType>
+
+// const initialState: LoginStateType = {
+//   isLoggedIn: false
+// }
+
+// export const authReducer = (state: LoginStateType = initialState, action: ActionType): LoginStateType => {
+//   switch (action.type) {
+//     case 'login/SET-IS-LOGGED-IN':
+//       return {...state, isLoggedIn: action.value}
+//     default:
+//       return state
+//   }
+// }

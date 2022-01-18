@@ -39,7 +39,7 @@ export const TodoLists = ({ demo, ...props }: TodoListsDomainType) => {
   }, [dispatch])
 
   const changeFilter = useCallback((value: FilterValuesType, todolistID: string) => {
-    const action = changeTodolistFilterAC(value, todolistID)
+    const action = changeTodolistFilterAC({filter: value, id: todolistID})
     dispatch(action)
     console.log('action', action)
   }, [dispatch])

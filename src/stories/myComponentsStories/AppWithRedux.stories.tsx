@@ -1,13 +1,13 @@
 import React from 'react';
 import {action} from '@storybook/addon-actions'
 import AppWithRedux from '../../app/AppWithRedux';
-import { ReduxStoreProviderDecorator } from '../ReduxStoreProviderDecorator';
+import { HashRouterDecorator, ReduxStoreProviderDecorator } from '../ReduxStoreProviderDecorator';
 
 
 export default {
   title: 'App with redux Base Example',
   component: AppWithRedux,
-  decorators: [ReduxStoreProviderDecorator]
+  decorators: [ReduxStoreProviderDecorator, HashRouterDecorator ]
 }
 
 const callback = action('Title is changed')

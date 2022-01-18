@@ -13,7 +13,7 @@ import ErrorSnackBar from '../components/common/ErrorSnackBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from './store';
 import { initializeAppTC, RequestStatusType } from './app-reducer';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { Login } from '../components/Login/Login';
 import { CircularProgress } from '@mui/material';
 import { logoutTC } from '../components/Login/auth-reducer';
@@ -32,7 +32,9 @@ function AppWithRedux({ demo = false, ...props }: PropsType) {
   const isLoggedIn = useSelector<AppRootState, boolean>(state => state.auth.isLoggedIn)
 
   useEffect(() => {
-    dispatch(initializeAppTC())
+    if(!demo) {
+      dispatch(initializeAppTC())
+    }
   }, [])
 
   const logoutHandler = useCallback(() => {
@@ -58,7 +60,6 @@ function AppWithRedux({ demo = false, ...props }: PropsType) {
         `}
       </script>
     </Helmet> */}
-      <BrowserRouter>
         <div className="App">
           <ErrorSnackBar />
           <AppBar position="static">
@@ -82,7 +83,6 @@ function AppWithRedux({ demo = false, ...props }: PropsType) {
             </Routes>
           </Container>
         </div>
-      </BrowserRouter>
     </>
   );
 }
