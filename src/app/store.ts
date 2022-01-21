@@ -5,6 +5,7 @@ import { tasksReducer } from "../components/Todolists/tasks-reducer";
 import { todolistsReducer } from "../components/Todolists/todolists-reducer";
 import { appReducer } from "./app-reducer";
 import { configureStore } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 
 
 const rootReducer = combineReducers({
@@ -30,3 +31,6 @@ export const store = configureStore({
 
 // @ts-ignore
 window.store = store
+
+type AppDispatchType = typeof store.dispatch
+export const useAppDispatch = () => useDispatch<AppDispatchType>()
