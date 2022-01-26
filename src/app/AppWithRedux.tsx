@@ -31,6 +31,8 @@ function AppWithRedux({ demo = false, ...props }: PropsType) {
   const isInitialized = useSelector<AppRootState, boolean>(state => state.app.initialized)
   const dispatch = useDispatch()
   const isLoggedIn = useSelector<AppRootState, boolean>(state => state.auth.isLoggedIn)
+  console.log('isInitialized APP',isInitialized)
+  console.log('isLoggedIn APP',isLoggedIn)
 
   useEffect(() => {
     if(!demo) {
@@ -136,7 +138,7 @@ function AppWithRedux({ demo = false, ...props }: PropsType) {
           </div>
           <Container>
             <Routes>
-              <Route path="/" element={<TodoLists demo={demo} />} />
+              <Route path="/" element={<TodoLists />} />
               <Route path="/login" element={<Login />} />
             </Routes>
           </Container>

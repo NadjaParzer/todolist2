@@ -8,17 +8,17 @@ import { Grid, Paper } from '@mui/material';
 import { Navigate } from 'react-router';
 
 type TodoListsDomainType = {
-  demo?: boolean
 }
 
-export const TodoLists = ({ demo, ...props }: TodoListsDomainType) => {
+export const TodoLists = (props: TodoListsDomainType) => {
   const dispatch = useDispatch()
   const todolists = useSelector<AppRootState, Array<TodolistDomainType>>((state) => state.todolists)
   //const [filter, setFilter] = useState<FilterValuesType>('all')
   const isLoggedIn = useSelector<AppRootState, boolean>(state => state.auth.isLoggedIn)
+  console.log('isLoggedIn TODOL',isLoggedIn)
  
   useEffect(() => {
-    if (demo || !isLoggedIn) {
+    if (!isLoggedIn) {
       return
     }
     dispatch(fetchTodolistsTC())
@@ -57,7 +57,6 @@ export const TodoLists = ({ demo, ...props }: TodoListsDomainType) => {
         return <Grid item>
           <Paper style={{ padding: '10px' }}>
             <Todolist
-              demo={demo}
               key={tl.id}
               todolist={tl}
               removeTodolist={removeTodolist}

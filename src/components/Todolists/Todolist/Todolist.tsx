@@ -16,10 +16,9 @@ type PropsType = {
   changeFilter: (value: FilterValuesType, todolistID: string) => void
   removeTodolist: (todolistID: string) => void
   changeTodolistTitle: (title: string, todolistID: string) => void
-  demo?: boolean
 }
 
-export const Todolist = React.memo(({demo=false, ...props}: PropsType) => {
+export const Todolist = React.memo((props: PropsType) => {
   console.log('TODOLIST is called!', props.todolist.id)
   const dispatch = useDispatch()
   const tasks = useSelector<AppRootState, Array<TaskType>>((state) => state.tasks[props.todolist.id])
