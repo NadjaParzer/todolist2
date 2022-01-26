@@ -4,7 +4,7 @@ import {Task} from './Tasks/Task'
 import { Editablespan } from '../../common/Editablespan';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootState } from '../../../app/store';
-import { fetchTasksTC, removeTaskTC, addTaskTC, updateTaskTC } from '../tasks-reducer';
+import { addTaskTC, fetchTasksTC, removeTaskTC, updateTaskTC } from '../tasks-reducer';
 import { FilterValuesType, TodolistDomainType } from '../todolists-reducer';
 import { TaskType } from '../../../api/todolist-api';
 import { Delete } from '@mui/icons-material';
@@ -37,15 +37,15 @@ export const Todolist = React.memo(({demo=false, ...props}: PropsType) => {
   }, [dispatch, props.todolist.id])
 
   const onChangeHandler = useCallback((taskId, status ) => {
-    dispatch(updateTaskTC(taskId, {status}, props.todolist.id))
+    dispatch(updateTaskTC({taskId,domainModel: {status}, id: props.todolist.id}))
   }, [dispatch, props.todolist.id])
 
   const onChangeTitle = useCallback((taskId, title) => {
-    dispatch(updateTaskTC(taskId, {title}, props.todolist.id))
+    dispatch(updateTaskTC({taskId, domainModel: {title}, id:props.todolist.id}))
   },[dispatch, props.todolist.id])
 
   const addTask = useCallback((title: string) => {
-    const action = addTaskTC(props.todolist.id, title)
+    const action = addTaskTC ({id: props.todolist.id, title})
     dispatch(action)
   }, [dispatch,  props.todolist.id])
 
