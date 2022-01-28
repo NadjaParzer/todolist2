@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { SetAppErrorActionType, setAppStatusAC, SetAppStatusActionType, RequestStatusType } from './../../app/app-reducer';
 import { AppRootState } from '../../app/store';
 import { UpdateTaskModelType, TodolistType } from '../../api/todolist-api';
-import { addTodolistAC, AddTodolistActionType, ClearTodoDataType, RemoveTodolistActionType, SetTodolistsActionType, todolistID1, todolistID2, removeTodolistAC, clearTodolistsAC, setTodolistsAC } from './todolists-reducer';
+import { SetTodolistsActionType, todolistID1, todolistID2, clearTodolistsAC, setTodolistsAC, addTodolistTC, removeTodolistTC } from './todolists-reducer';
 import {v1} from 'uuid';
 import { TaskPriorities, TaskStatuses, TaskType, todolistAPI } from '../../api/todolist-api';
 import { Dispatch } from 'redux';
@@ -127,10 +127,10 @@ const slice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(addTodolistAC, (state, action) => {
+    builder.addCase(addTodolistTC.fulfilled, (state, action) => {
       state[action.payload.todolist.id] = []
     })
-    builder.addCase(removeTodolistAC, (state, action) => {
+    builder.addCase(removeTodolistTC.fulfilled , (state, action) => {
       delete state[action.payload.id]
     })
     builder.addCase(setTodolistsAC, (state, action) => {

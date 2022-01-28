@@ -30,7 +30,7 @@ export const TodoLists = (props: TodoListsDomainType) => {
   }, [dispatch])
 
   const changeTodolistTitle = useCallback((newTitle: string, todolistID: string) => {
-    dispatch(changeTodolistTitleTC(newTitle, todolistID))
+    dispatch(changeTodolistTitleTC({title: newTitle, id: todolistID}))
   }, [dispatch])
 
   const addTodolist = useCallback((title: string) => {

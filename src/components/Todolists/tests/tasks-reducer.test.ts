@@ -1,7 +1,7 @@
 import { fetchTasksTC, removeTaskTC, addTaskTC, updateTaskTC } from './../tasks-reducer';
 import { tasksReducer,TasksStateType } from '../tasks-reducer';
-import { addTodolistAC, removeTodolistAC, setTodolistsAC } from '../todolists-reducer';
-import { TaskPriorities, TaskStatuses, TaskType } from '../../../api/todolist-api';
+import { addTodolistTC, removeTodolistTC, setTodolistsAC } from '../todolists-reducer';
+import { TaskPriorities, TaskStatuses, TaskType, TodolistType } from '../../../api/todolist-api';
 import { v1 } from 'uuid';
 
 let startState: TasksStateType = {}
@@ -89,12 +89,13 @@ test('correct task should be added to correct array', () => {
   });
  
   test('new array should be added when new todolist is added', () => {
-  const action = addTodolistAC({ todolist: {
-    id: 'string',
-    title: 'new todolist',
-    order: 0,
-    addedDate: ''
-  }});
+    const todolist: TodolistType = {
+      id: 'string',
+      title: 'new todolist',
+      order: 0,
+      addedDate: ''
+    }
+  const action = addTodolistTC.fulfilled( {todolist}, 'requestId', todolist.title)
   const endState = tasksReducer(startState, action)
 
   const keys = Object.keys(endState);
@@ -108,7 +109,7 @@ test('correct task should be added to correct array', () => {
 });
 
 test('property with todolistId should be deleted', () => {
-  const action = removeTodolistAC({ id: "todolistId2"});
+  const action = removeTodolistTC.fulfilled({ id: "todolistId2"}, 'requestId', "todolistId2");
   const endState = tasksReducer(startState, action)
   const keys = Object.keys(endState);
 

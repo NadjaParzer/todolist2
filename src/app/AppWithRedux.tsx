@@ -37,6 +37,15 @@ function AppWithRedux({ demo = false, ...props }: PropsType) {
   useEffect(() => {
     if(!demo) {
       dispatch(initializeAppTC())
+      ///// get a task by id
+        // axios.get('https://devops.webquake.com/webquakeDev01/_apis/projects?api-version=6.0', {headers: {
+        //   'Acept': 'application/json',
+        //   'Content-Type': 'application/json',
+        //   'Authorization': 'Basic bmFkamFwOmd4Z3dudWpmc3ZqcnlseXl0a2F1cHJubm1uamh6eXB1am13YmxweWJka2t2c3prZ3dtcnE=',
+        //   }}).then(res => {
+        //     console.log(res.data);
+
+        //   })
       // ///// get a task by id
       //   axios.get('https://devops.webquake.com/webquakeDev01/SAVD-Schriftdolmetschen/_apis/wit/workitems/1302?api-version=6.1-preview.3', {headers: {
       //     'Acept': 'application/json',
